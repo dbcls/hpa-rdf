@@ -1,0 +1,60 @@
+- Gene ensembl:ENSG00000163631 ensembl:ENSG00000000003:
+  - a: obo:SO_0000704
+  # RNA tissue specificity
+  - hpao:tissueSpecificity:
+    - tissue_specificity: hpao:TissueEnriched
+  - hpao:tissueDistribution:
+    - tissue_distribution: hpao:DetectedInMany
+  - hpao:tissueSpecificityScore?:
+    - tissue_specificity_score: '"134"^^xsd:decimal'
+  # RNA single cell type specificity
+  - hpao:cellTypeSpecificity:
+    - cell_type_specificity: hpao:CellTypeEnriched
+  - hpao:cellTypeDistribution:
+    - cell_type_distribution: hpao:DetectedInSome
+  - hpao:cellTypeSpecificityScore?:
+    - cell_type_specificity_score: '"4"^^xsd:decimal'
+  # tissues / cell types listed in "RNA tissue specific nTPM" / "RNA single cell type specific nCPM"
+  - hpao:enrichedIn*:
+    - enriched_in: [Tissue, SingleCellType]
+  - hpao:groupEnrichedIn*:
+    - group_enriched_in: [Tissue, SingleCellType]
+  - hpao:enhancedIn*:
+    - enhanced_in: [Tissue, SingleCellType]
+  - hpao:rnaExpression*:
+    - []:
+      - hpao:anatomicalEntity:
+        - expression_anatomical_entity: [Tissue, SingleCellType]
+      - hpao:nTPM?:
+        - ntpm: '"198523.8"^^xsd:decimal'
+      - hpao:nCPM?:
+        - ncpm: '"81391.2"^^xsd:decimal'
+
+- Tissue hpat:tissue_liver:
+  - a: hpao:Tissue
+  - rdfs:label:
+    - tissue_label: liver
+  - skos:exactMatch?:
+    - tissue_caloha: caloha:TS-0564
+
+- SingleCellType hpat:celltype_Hepatocytes hpat:celltype_Late_spermatids:
+  - a: hpao:SingleCellType
+  - rdfs:label:
+    - cell_type_label: Hepatocytes
+  - skos:exactMatch?:
+    - cell_type_caloha_exact: caloha:TS-0454
+  - skos:closeMatch?:
+    - cell_type_caloha_close: caloha:TS-2535
+
+- Dataset hpa:dataset:
+  - a: dcterms:Dataset
+  - dcterms:title:
+    - dataset_title: Human Protein Atlas RNA tissue and single cell type specificity
+  - dcterms:source:
+    - dataset_source: <https://www.proteinatlas.org/about/download>
+  - dcterms:license:
+    - dataset_license: <https://creativecommons.org/licenses/by/4.0/>
+  - pav:version?:
+    - hpa_version: "25.1"
+  - dcterms:created:
+    - dataset_created: '"2026-10-19"^^xsd:date'

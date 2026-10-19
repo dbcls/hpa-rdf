@@ -1,0 +1,152 @@
+@prefix hpao: <http://med2rdf.org/hpao/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://med2rdf.org/hpao/ontology> a owl:Ontology ;
+    rdfs:label "Human Protein Atlas RNA specificity ontology" ;
+    rdfs:comment "Vocabulary for HPA RNA tissue / single cell type specificity (proteinatlas.tsv)." .
+
+### Classes
+
+hpao:AnatomicalEntity a owl:Class ;
+    rdfs:label "HPA anatomical entity" .
+
+hpao:Tissue a owl:Class ;
+    rdfs:subClassOf hpao:AnatomicalEntity ;
+    rdfs:label "HPA tissue" ;
+    rdfs:comment "A (consolidated) tissue used in the HPA RNA tissue specificity classification." .
+
+hpao:SingleCellType a owl:Class ;
+    rdfs:subClassOf hpao:AnatomicalEntity ;
+    rdfs:label "HPA single cell type" ;
+    rdfs:comment "A cell type used in the HPA RNA single cell type specificity classification." .
+
+hpao:SpecificityCategory a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "RNA specificity category" .
+
+hpao:DistributionCategory a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "RNA distribution category" .
+
+### Gene -> anatomical entity
+
+hpao:enrichedIn a owl:ObjectProperty ;
+    rdfs:label "enriched in" ;
+    rdfs:range hpao:AnatomicalEntity ;
+    rdfs:comment "At least four-fold higher mRNA level in this tissue / cell type compared to any other (Tissue enriched / Cell type enriched)." .
+
+hpao:groupEnrichedIn a owl:ObjectProperty ;
+    rdfs:label "group enriched in" ;
+    rdfs:range hpao:AnatomicalEntity ;
+    rdfs:comment "Member of a small group of tissues / cell types with at least four-fold higher mean mRNA level compared to any other (Group enriched)." .
+
+hpao:enhancedIn a owl:ObjectProperty ;
+    rdfs:label "enhanced in" ;
+    rdfs:range hpao:AnatomicalEntity ;
+    rdfs:comment "At least four-fold higher mRNA level in this tissue / cell type compared to the mean of all (Tissue enhanced / Cell type enhanced)." .
+
+### Gene -> category / score
+
+hpao:tissueSpecificity a owl:ObjectProperty ;
+    rdfs:label "RNA tissue specificity" ;
+    rdfs:range hpao:SpecificityCategory .
+
+hpao:tissueDistribution a owl:ObjectProperty ;
+    rdfs:label "RNA tissue distribution" ;
+    rdfs:range hpao:DistributionCategory .
+
+hpao:tissueSpecificityScore a owl:DatatypeProperty ;
+    rdfs:label "RNA tissue specificity score" ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Fold change to the next highest tissue; given for Tissue enriched and Group enriched genes only." .
+
+hpao:cellTypeSpecificity a owl:ObjectProperty ;
+    rdfs:label "RNA single cell type specificity" ;
+    rdfs:range hpao:SpecificityCategory .
+
+hpao:cellTypeDistribution a owl:ObjectProperty ;
+    rdfs:label "RNA single cell type distribution" ;
+    rdfs:range hpao:DistributionCategory .
+
+hpao:cellTypeSpecificityScore a owl:DatatypeProperty ;
+    rdfs:label "RNA single cell type specificity score" ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Fold change to the next highest cell type; given for Cell type enriched and Group enriched genes only." .
+
+### Expression values
+
+hpao:RNAExpression a owl:Class ;
+    rdfs:label "RNA expression value" ;
+    rdfs:comment "Normalized RNA expression of a gene in a tissue or single cell type. Given only for the tissues / cell types a gene is enriched, group enriched or enhanced in (RNA tissue specific nTPM / RNA single cell type specific nCPM)." .
+
+hpao:rnaExpression a owl:ObjectProperty ;
+    rdfs:label "RNA expression" ;
+    rdfs:range hpao:RNAExpression .
+
+hpao:anatomicalEntity a owl:ObjectProperty ;
+    rdfs:label "anatomical entity" ;
+    rdfs:domain hpao:RNAExpression ;
+    rdfs:range hpao:AnatomicalEntity .
+
+hpao:nTPM a owl:DatatypeProperty ;
+    rdfs:label "nTPM" ;
+    rdfs:domain hpao:RNAExpression ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Normalized transcripts per million (tissue)." .
+
+hpao:nCPM a owl:DatatypeProperty ;
+    rdfs:label "nCPM" ;
+    rdfs:domain hpao:RNAExpression ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Normalized counts per million (single cell type)." .
+
+### Specificity categories
+
+hpao:TissueSpecificityScheme a skos:ConceptScheme ;
+    rdfs:label "RNA tissue specificity" .
+
+hpao:TissueEnriched a hpao:SpecificityCategory ;
+    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Tissue enriched" .
+hpao:TissueGroupEnriched a hpao:SpecificityCategory ;
+    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Group enriched" .
+hpao:TissueEnhanced a hpao:SpecificityCategory ;
+    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Tissue enhanced" .
+hpao:LowTissueSpecificity a hpao:SpecificityCategory ;
+    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Low tissue specificity" .
+hpao:TissueNotDetected a hpao:SpecificityCategory ;
+    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Not detected" .
+
+hpao:CellTypeSpecificityScheme a skos:ConceptScheme ;
+    rdfs:label "RNA single cell type specificity" .
+
+hpao:CellTypeEnriched a hpao:SpecificityCategory ;
+    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Cell type enriched" .
+hpao:CellTypeGroupEnriched a hpao:SpecificityCategory ;
+    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Group enriched" .
+hpao:CellTypeEnhanced a hpao:SpecificityCategory ;
+    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Cell type enhanced" .
+hpao:LowCellTypeSpecificity a hpao:SpecificityCategory ;
+    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Low cell type specificity" .
+hpao:CellTypeNotDetected a hpao:SpecificityCategory ;
+    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Not detected" .
+
+### Distribution categories (shared by tissue and single cell type)
+
+hpao:DistributionScheme a skos:ConceptScheme ;
+    rdfs:label "RNA distribution" .
+
+hpao:DetectedInAll a hpao:DistributionCategory ;
+    skos:inScheme hpao:DistributionScheme ; skos:prefLabel "Detected in all" .
+hpao:DetectedInMany a hpao:DistributionCategory ;
+    skos:inScheme hpao:DistributionScheme ; skos:prefLabel "Detected in many" .
+hpao:DetectedInSome a hpao:DistributionCategory ;
+    skos:inScheme hpao:DistributionScheme ; skos:prefLabel "Detected in some" .
+hpao:DetectedInSingle a hpao:DistributionCategory ;
+    skos:inScheme hpao:DistributionScheme ; skos:prefLabel "Detected in single" .
+hpao:NotDetected a hpao:DistributionCategory ;
+    skos:inScheme hpao:DistributionScheme ; skos:prefLabel "Not detected" .
