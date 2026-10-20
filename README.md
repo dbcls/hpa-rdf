@@ -8,9 +8,10 @@ RNA tissue / single cell type specificity を RDF 化する。
 | パス | 内容 |
 |---|---|
 | `hpa2rdf.py` | 変換スクリプト（Python 3 標準ライブラリのみ） |
+| `hpa2togodx_json.py` | TogoDX 用ツリー JSON（SPARQList 案と同じ形）を TSV から直接生成 → `out/sparqlist/*.json` |
 | `hpao.ttl` | オントロジー（クラス・プロパティ・カテゴリ概念） |
-| `mapping/tissue_caloha.tsv`, `mapping/cell_type_caloha.tsv` | HPA 名 → CALOHA の対応（`match` 列: exact / close） |
-| `config/hpa/` | rdf-config（`model.yaml`, `prefix.yaml`, `schema.svg`） |
+| `mapping/tissue.tsv`, `mapping/cell_type.tsv` | HPA 名 → HPA ID（`HPAT_*` / `HPAC_*`）、CALOHA（`caloha_match` 列: exact / close）、UBERON（組織）/ CL（細胞型） |
+| `rdf-config/hpa/` | rdf-config（`model.yaml`, `prefix.yaml`, `schema.svg`） |
 | `sparqlist/*.md` | TogoDX 用 SPARQList 案（`HPA_GRAPH` を読み込み先グラフに置換） |
 | `data/proteinatlas.tsv.zip` | 入力（ダウンロードしたもの） |
 | `out/hpa.ttl` | 出力 |
@@ -24,14 +25,13 @@ python3 hpa2rdf.py data/proteinatlas.tsv.zip -o out/hpa.ttl --hpa-version 25.1
 ```
 
 新しいリリースで分類値や列名が変わった場合はエラーで止まる。
-対応表にない組織・細胞型名は警告を出し、CALOHA 対応なしの用語として出力する。
+対応表にない組織・細胞型名があるとエラーで止まる。その場合は `mapping/` に新しい番号（既存の最大番号の次）で行を追加する。
 
 ## データモデル
 
 ```turtle
-@prefix hpao: <http://med2rdf.org/hpao/ontology#> .
-@prefix hpat: <http://med2rdf.org/hpao/term/> .
-@prefix hpa:  <http://med2rdf.org/hpao/resource/> .
+@prefix hpao: <http://med2rdf.org/hpa/ontology#> .
+@prefix hpa:  <http://med2rdf.org/hpa/resource/> .
 
 ensembl:ENSG00000000003 a obo:SO_0000704 ;
     hpao:tissueSpecificity hpao:LowTissueSpecificity ;
@@ -39,14 +39,15 @@ ensembl:ENSG00000000003 a obo:SO_0000704 ;
     hpao:cellTypeSpecificity hpao:CellTypeGroupEnriched ;
     hpao:cellTypeDistribution hpao:DetectedInMany ;
     hpao:cellTypeSpecificityScore "5"^^xsd:decimal ;
-    hpao:groupEnrichedIn hpat:celltype_Esophageal_apical_cells ,
-        hpat:celltype_Late_spermatids ;
-    hpao:rnaExpression [ hpao:anatomicalEntity hpat:celltype_Esophageal_apical_cells ; hpao:nCPM 1280.5 ] ,
-        [ hpao:anatomicalEntity hpat:celltype_Late_spermatids ; hpao:nCPM 3513.3 ] .
+    hpao:groupEnrichedIn hpao:HPAC_000047 ,
+        hpao:HPAC_000070 ;
+    hpao:rnaExpression [ hpao:anatomicalEntity hpao:HPAC_000047 ; hpao:nCPM 1280.5 ] ,
+        [ hpao:anatomicalEntity hpao:HPAC_000070 ; hpao:nCPM 3513.3 ] .
 
-hpat:celltype_Late_spermatids a hpao:SingleCellType ;
+hpao:HPAC_000070 a hpao:SingleCellType ;
+    dcterms:identifier "HPAC_000070" ;
     rdfs:label "Late spermatids" ;
-    skos:closeMatch caloha:TS-2535 .
+    skos:closeMatch caloha:TS-2535 , obo:CL_4030037 .
 ```
 
 | 述語 | 値 | 対象 |
@@ -59,6 +60,10 @@ hpat:celltype_Late_spermatids a hpao:SingleCellType ;
 
 - 遺伝子の型は `obo:SO_0000704`（gene）
 - 組織と細胞型は同じ 3 述語を使い、目的語のクラスで区別する
+- 組織・細胞型の IRI は HPA ID（`hpao:HPAT_000018` = liver、`hpao:HPAC_000063` = Hepatocytes）。
+  ID と CL / UBERON 対応は [sh-ikeda/hpa-expr-spec-rdf-converter](https://github.com/sh-ikeda/hpa-expr-spec-rdf-converter) の
+  `input/hpa_tissue_caloha.tsv`, `hpa_cell_cl.tsv`, `hpa_tissue_uberon.tsv` を元にした（同じ IRI を指す）
+- CALOHA は exact / close を区別、UBERON / CL はすべて `skos:closeMatch`
 - 組織・細胞型のラベルは HPA の名前そのまま（`skin 1` などの番号付きも含む）
 - 収録範囲は `proteinatlas.tsv` にある情報のみ。発現量は specific 列の値なので、
   enriched / group enriched / enhanced の組織・細胞型の分だけ（全組織 × 全遺伝子の行列ではない）
@@ -71,10 +76,14 @@ hpat:celltype_Late_spermatids a hpao:SingleCellType ;
 | enriched / group enriched / enhanced（遺伝子数） | 3,132 / 1,547 / 6,356 | 1,906 / 1,995 / 13,393 |
 | Low / Not detected（遺伝子数） | 8,096 / 1,031 | 1,590 / 1,278 |
 | 遺伝子–組織リンク（＝発現量の値の数） | 17,870 | 87,130 |
-| 用語数（うち CALOHA 対応あり） | 37 (37) | 154 (71) |
+| 用語数 | 37 | 154 |
+| CALOHA / UBERON・CL 対応あり | 37 / 37 | 71 / 101（どちらか 107） |
 
 ## 経緯
 
 TogoDX/Human の旧グラフ（`hpa_tissue_specificity` / `hpa_cell_specificity`、HPA v20 から作成、
 `refexo:isPositivelySpecificTo` のみ）を逆算した結果をもとに、分類・分布・スコアを保持するスキーマへ置き換えた。
 `mapping/` の CALOHA 対応のうち v20 にあった名前は旧グラフから復元したもの。
+組織・細胞型の ID、UBERON / CL 対応、名前空間（`http://med2rdf.org/hpa/`）は池田さんのリポジトリに合わせた。
+対応表のうち `proteinatlas.tsv` v25.1 に出てこない行（組織 2、細胞型グループ 33）は ID 保持のため残している。
+池田さんの表にない UBERON（blood vessel, cervix, choroid plexus）と CALOHA（blood, ductus deferens）は補った。

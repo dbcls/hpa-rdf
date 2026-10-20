@@ -1,0 +1,40 @@
+# hpa_id	hpa_name	caloha_id	caloha_label	caloha_match	uberon_id	uberon_label
+HPAT_000001	adipose tissue	TS-0013	Adipose tissue	exact	UBERON_0001013	adipose tissue
+HPAT_000002	adrenal gland	TS-0016	Adrenal gland	exact	UBERON_0002369	adrenal gland
+HPAT_000003	blood	TS-0079	Blood	exact	UBERON_0000178	blood
+HPAT_000004	blood vessel	TS-0080	Blood vessel	exact	UBERON_0001981	blood vessel
+HPAT_000005	bone marrow	TS-0087	Bone marrow	exact	UBERON_0002371	bone marrow
+HPAT_000006	brain	TS-0095	Brain	exact	UBERON_0000955	brain
+HPAT_000007	breast	TS-2083	Breast	exact	UBERON_0000310	breast
+HPAT_000008	cervix	TS-0134	Uterine cervix	exact	UBERON_0000002	uterine cervix
+HPAT_000009	choroid plexus	TS-0145	Choroid plexus	exact	UBERON_0001886	choroid plexus
+HPAT_000010	ductus deferens	TS-1105	Vas deferens	exact	UBERON_0001000	vas deferens
+HPAT_000011	endometrium 1	TS-0276	Endometrium	exact	UBERON_0001295	endometrium
+HPAT_000012	epididymis	TS-0285	Epididymis	exact	UBERON_0001301	epididymis
+HPAT_000013	esophagus	TS-0700	Esophagus	exact	UBERON_0001043	esophagus
+HPAT_000014	fallopian tube	TS-0732	Oviduct	exact	UBERON_0003889	fallopian tube
+HPAT_000015	gallbladder	TS-0394	Gall bladder	exact	UBERON_0002110	gall bladder
+HPAT_000016	intestine	TS-0490	Intestine	exact	UBERON_0000160	intestine
+HPAT_000017	kidney	TS-0510	Kidney	exact	UBERON_0002113	kidney
+HPAT_000018	liver	TS-0564	Liver	exact	UBERON_0002107	liver
+HPAT_000019	lung	TS-0568	Lung	exact	UBERON_0002048	lung
+HPAT_000020	lymphoid tissue	TS-0584	Lymphoid tissue	exact	UBERON_0001744	lymphoid tissue
+HPAT_000021	ovary	TS-0730	Ovary	exact	UBERON_0000992	ovary
+HPAT_000022	pancreas	TS-0736	Pancreas	exact	UBERON_0001264	pancreas
+HPAT_000023	parathyroid gland	TS-0745	Parathyroid	exact	UBERON_0001132	parathyroid gland
+HPAT_000024	pituitary gland	TS-0798	Pituitary gland	exact	UBERON_0000007	pituitary gland
+HPAT_000025	placenta	TS-0799	Placenta	exact	UBERON_0001987	placenta
+HPAT_000026	prostate	TS-0828	Prostate	exact	UBERON_0002367	prostate gland
+HPAT_000027	retina	TS-0865	Retina	exact	UBERON_0000966	retina
+HPAT_000028	salivary gland	TS-0892	Salivary gland	exact	UBERON_0001044	saliva-secreting gland
+HPAT_000029	seminal vesicle	TS-0919	Seminal vesicle	exact	UBERON_0000998	seminal vesicle
+HPAT_000030	skeletal muscle	TS-2615	Skeletal muscle organ	exact	UBERON_0001134	skeletal muscle tissue
+HPAT_000031	skin 1	TS-0934	Skin	exact	UBERON_0000014	zone of skin
+HPAT_000032	stomach 1	TS-0980	Stomach	exact	UBERON_0000945	stomach
+HPAT_000033	testis	TS-1030	Testis	exact	UBERON_0000473	testis
+HPAT_000034	thyroid gland	TS-1047	Thyroid	exact	UBERON_0002046	thyroid gland
+HPAT_000035	tongue	TS-1050	Tongue	exact	UBERON_0001723	tongue
+HPAT_000036	urinary bladder	TS-1090	Urinary bladder	exact	UBERON_0001255	urinary bladder
+HPAT_000037	vagina	TS-1103	Vagina	exact	UBERON_0000996	vagina
+HPAT_000038	heart muscle	TS-0440	Heart muscle tissue	exact	UBERON_0002349	myocardium
+HPAT_000039	smooth muscle	TS-0943	Smooth muscle tissue	exact	UBERON_0001135	smooth muscle tissue

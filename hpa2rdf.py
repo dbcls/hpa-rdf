@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """Convert Human Protein Atlas proteinatlas.tsv (latest release) into RDF.
 
-Vocabulary: hpao.ttl (http://med2rdf.org/hpao/ontology#)
+Vocabulary: hpao.ttl (http://med2rdf.org/hpa/ontology#)
 
   ensembl:ENSG... a obo:SO_0000704 ;
       hpao:tissueSpecificity hpao:TissueEnriched ;
       hpao:tissueDistribution hpao:DetectedInSingle ;
       hpao:tissueSpecificityScore 16 ;
-      hpao:enrichedIn hpat:tissue_liver ;
-      hpao:rnaExpression [ hpao:anatomicalEntity hpat:tissue_liver ; hpao:nTPM 1234.5 ] ;
+      hpao:enrichedIn hpao:HPAT_000018 ;
+      hpao:rnaExpression [ hpao:anatomicalEntity hpao:HPAT_000018 ; hpao:nTPM 1234.5 ] ;
       hpao:cellTypeSpecificity hpao:CellTypeEnhanced ;
       ...
-  hpat:tissue_liver a hpao:Tissue ; rdfs:label "liver" ; skos:exactMatch caloha:TS-0564 .
+  hpao:HPAT_000018 a hpao:Tissue ; dcterms:identifier "HPAT_000018" ; rdfs:label "liver" ;
+      skos:exactMatch caloha:TS-0564 ; skos:closeMatch obo:UBERON_0002107 .
+
+Tissue / cell type IDs (HPAT_* / HPAC_*) and their CALOHA, UBERON and CL matches
+come from mapping/tissue.tsv and mapping/cell_type.tsv (shared with
+sh-ikeda/hpa-expr-spec-rdf-converter).
 
 Every gene row gets a specificity and distribution category (incl. Low / Not
 detected). enrichedIn / groupEnrichedIn / enhancedIn link to the tissues / cell
@@ -26,9 +31,7 @@ import argparse
 import csv
 import datetime
 import io
-import re
 import sys
-import unicodedata
 import zipfile
 from pathlib import Path
 
@@ -40,9 +43,8 @@ PREFIXES = """@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix pav: <http://purl.org/pav/> .
-@prefix hpao: <http://med2rdf.org/hpao/ontology#> .
-@prefix hpat: <http://med2rdf.org/hpao/term/> .
-@prefix hpa: <http://med2rdf.org/hpao/resource/> .
+@prefix hpao: <http://med2rdf.org/hpa/ontology#> .
+@prefix hpa: <http://med2rdf.org/hpa/resource/> .
 @prefix ensembl: <http://identifiers.org/ensembl/> .
 @prefix caloha: <http://purl.obolibrary.org/obo/caloha.obo#> .
 @prefix obo: <http://purl.obolibrary.org/obo/> .
@@ -65,8 +67,7 @@ DATASETS = [
         "column": "RNA tissue",
         "values": "RNA tissue specific nTPM",
         "class": "hpao:Tissue",
-        "term_prefix": "tissue_",
-        "mapping": "tissue_caloha.tsv",
+        "mapping": "tissue.tsv",
         "specificity": "hpao:tissueSpecificity",
         "distribution": "hpao:tissueDistribution",
         "score": "hpao:tissueSpecificityScore",
@@ -83,8 +84,7 @@ DATASETS = [
         "column": "RNA single cell type",
         "values": "RNA single cell type specific nCPM",
         "class": "hpao:SingleCellType",
-        "term_prefix": "celltype_",
-        "mapping": "cell_type_caloha.tsv",
+        "mapping": "cell_type.tsv",
         "specificity": "hpao:cellTypeSpecificity",
         "distribution": "hpao:cellTypeDistribution",
         "score": "hpao:cellTypeSpecificityScore",
@@ -110,18 +110,20 @@ def open_tsv(path):
 
 
 def load_mapping(path):
-    """hpa_name -> list of (property, CURIE)"""
+    """hpa_name -> (HPA ID, [(property, CURIE), ...])"""
     mapping = {}
     with open(path, encoding="utf-8") as f:
         for line in f:
             if line.startswith("#") or not line.strip():
                 continue
-            name, caloha_id, _label, match = (line.rstrip("\n").split("\t") + [""] * 4)[:4]
+            hpa_id, name, caloha_id, _label, match, ext_id, _ext_label = (line.rstrip("\n").split("\t") + [""] * 7)[:7]
             links = []
             if caloha_id:
                 prop = "skos:closeMatch" if match == "close" else "skos:exactMatch"
                 links.append((prop, f"caloha:{caloha_id}"))
-            mapping[name] = links
+            if ext_id:  # UBERON (tissue) / CL (cell type)
+                links.append(("skos:closeMatch", f"obo:{ext_id}"))
+            mapping[name] = (hpa_id, links)
     return mapping
 
 
@@ -140,12 +142,6 @@ def parse_values(value, gene):
     return pairs
 
 
-def local_name(name):
-    # "Müller glia" -> "Muller_glia", "Pituicytes/FSCs" -> "Pituicytes_FSCs"
-    s = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
-    return re.sub(r"[^A-Za-z0-9-]+", "_", s).strip("_")
-
-
 def literal(s):
     return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
@@ -161,7 +157,7 @@ def main():
     ap.add_argument("input", help="proteinatlas.tsv or proteinatlas.tsv.zip")
     ap.add_argument("-o", "--output", default="hpa.ttl", help="output Turtle file (default: hpa.ttl)")
     ap.add_argument("-m", "--mapping-dir", default=HERE / "mapping", type=Path,
-                    help="directory holding tissue_caloha.tsv and cell_type_caloha.tsv")
+                    help="directory holding tissue.tsv and cell_type.tsv")
     ap.add_argument("--hpa-version", help="HPA release, e.g. 25.1 (recorded in the dataset description)")
     args = ap.parse_args()
 
@@ -194,12 +190,12 @@ def main():
             objs = []
             exprs = []
             for name, num in pairs:
-                curie = "hpat:" + d["term_prefix"] + local_name(name)
-                prev = terms.setdefault(curie, (d["class"], name, mapping.get(name, [])))
-                if prev[1] != name:
-                    sys.exit(f"term ID collision: {name!r} and {prev[1]!r} -> {curie}")
                 if name not in mapping:
                     unlisted.add(name)
+                    continue
+                hpa_id, links = mapping[name]
+                curie = "hpao:" + hpa_id
+                terms[curie] = (d["class"], hpa_id, name, links)
                 objs.append(curie)
                 exprs.append(f"[ hpao:anatomicalEntity {curie} ; {d['unit']} {num} ]")
             if objs:
@@ -207,10 +203,10 @@ def main():
                 po.append("hpao:rnaExpression " + " ,\n        ".join(exprs))
                 n_links += len(objs)
         n_terms = sum(1 for t in terms.values() if t[0] == d["class"])
-        n_mapped = sum(1 for t in terms.values() if t[0] == d["class"] and t[2])
-        print(f"  {d['column']}: {n_links} links to {n_terms} terms ({n_mapped} with CALOHA match)", file=sys.stderr)
-        for name in sorted(unlisted):
-            print(f"    not in {d['mapping']}: {name}", file=sys.stderr)
+        n_mapped = sum(1 for t in terms.values() if t[0] == d["class"] and t[3])
+        print(f"  {d['column']}: {n_links} links to {n_terms} terms ({n_mapped} with external match)", file=sys.stderr)
+        if unlisted:
+            sys.exit(f"not in {d['mapping']} (add a row with a new HPA ID): " + ", ".join(sorted(unlisted)))
 
     with open(args.output, "w", encoding="utf-8") as out:
         out.write(PREFIXES + "\n")
@@ -222,8 +218,8 @@ def main():
             out.write(f"    pav:version {literal(args.hpa_version)} ;\n")
         out.write(f'    dcterms:created "{datetime.date.today().isoformat()}"^^xsd:date .\n\n')
 
-        for curie, (cls, label, links) in sorted(terms.items()):
-            out.write(f"{curie} a {cls} ;\n    rdfs:label {literal(label)}")
+        for curie, (cls, hpa_id, label, links) in sorted(terms.items()):
+            out.write(f"{curie} a {cls} ;\n    dcterms:identifier {literal(hpa_id)} ;\n    rdfs:label {literal(label)}")
             for prop, target in links:
                 out.write(f" ;\n    {prop} {target}")
             out.write(" .\n")

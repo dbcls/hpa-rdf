@@ -5,8 +5,7 @@ skos: <http://www.w3.org/2004/02/skos/core#>
 dcterms: <http://purl.org/dc/terms/>
 pav: <http://purl.org/pav/>
 obo: <http://purl.obolibrary.org/obo/>
-hpao: <http://med2rdf.org/hpao/ontology#>
-hpat: <http://med2rdf.org/hpao/term/>
-hpa: <http://med2rdf.org/hpao/resource/>
+hpao: <http://med2rdf.org/hpa/ontology#>
+hpa: <http://med2rdf.org/hpa/resource/>
 ensembl: <http://identifiers.org/ensembl/>
 caloha: <http://purl.obolibrary.org/obo/caloha.obo#>

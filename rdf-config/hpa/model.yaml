@@ -30,21 +30,28 @@
       - hpao:nCPM?:
         - ncpm: '"81391.2"^^xsd:decimal'
 
-- Tissue hpat:tissue_liver:
+- Tissue hpao:HPAT_000018:
   - a: hpao:Tissue
+  - dcterms:identifier:
+    - tissue_id: HPAT_000018
   - rdfs:label:
     - tissue_label: liver
   - skos:exactMatch?:
     - tissue_caloha: caloha:TS-0564
+  - skos:closeMatch?:
+    - tissue_uberon: obo:UBERON_0002107
 
-- SingleCellType hpat:celltype_Hepatocytes hpat:celltype_Late_spermatids:
+- SingleCellType hpao:HPAC_000063 hpao:HPAC_000070:
   - a: hpao:SingleCellType
+  - dcterms:identifier:
+    - cell_type_id: HPAC_000063
   - rdfs:label:
     - cell_type_label: Hepatocytes
   - skos:exactMatch?:
     - cell_type_caloha_exact: caloha:TS-0454
-  - skos:closeMatch?:
-    - cell_type_caloha_close: caloha:TS-2535
+  # CALOHA close matches and Cell Ontology
+  - skos:closeMatch*:
+    - cell_type_close_match: obo:CL_0000182 caloha:TS-2535
 
 - Dataset hpa:dataset:
   - a: dcterms:Dataset
