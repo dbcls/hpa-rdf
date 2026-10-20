@@ -8,11 +8,9 @@ RNA tissue / single cell type specificity を RDF 化する。
 | パス | 内容 |
 |---|---|
 | `hpa2rdf.py` | 変換スクリプト（Python 3 標準ライブラリのみ） |
-| `hpa2togodx_json.py` | TogoDX 用ツリー JSON（SPARQList 案と同じ形）を TSV から直接生成 → `out/sparqlist/*.json` |
-| `hpao.ttl` | オントロジー（クラス・プロパティ・カテゴリ概念） |
+| `ontology/hpao.ttl` | オントロジー（クラス・プロパティ・カテゴリ概念） |
 | `mapping/tissue.tsv`, `mapping/cell_type.tsv` | HPA 名 → HPA ID（`HPAT_*` / `HPAC_*`）、CALOHA（`caloha_match` 列: exact / close）、UBERON（組織）/ CL（細胞型） |
 | `rdf-config/hpa/` | rdf-config（`model.yaml`, `prefix.yaml`, `schema.svg`） |
-| `sparqlist/*.md` | TogoDX 用 SPARQList 案（`HPA_GRAPH` を読み込み先グラフに置換） |
 | `data/proteinatlas.tsv.zip` | 入力（ダウンロードしたもの） |
 | `out/hpa.ttl` | 出力 |
 
@@ -21,11 +19,12 @@ RNA tissue / single cell type specificity を RDF 化する。
 ```sh
 curl -L -o data/proteinatlas.tsv.zip https://www.proteinatlas.org/download/proteinatlas.tsv.zip
 python3 hpa2rdf.py data/proteinatlas.tsv.zip -o out/hpa.ttl --hpa-version 25.1
-# out/hpa.ttl と hpao.ttl をトリプルストアに読み込む
+# out/hpa.ttl と ontology/hpao.ttl をトリプルストアに読み込む
 ```
 
 新しいリリースで分類値や列名が変わった場合はエラーで止まる。
 対応表にない組織・細胞型名があるとエラーで止まる。その場合は `mapping/` に新しい番号（既存の最大番号の次）で行を追加する。
+対応表には v25.1 に出てこない名前の行も ID 保持のため残してある（出力されるのは使われている用語のみ）。
 
 ## データモデル
 
@@ -61,8 +60,7 @@ hpao:HPAC_000070 a hpao:SingleCellType ;
 - 遺伝子の型は `obo:SO_0000704`（gene）
 - 組織と細胞型は同じ 3 述語を使い、目的語のクラスで区別する
 - 組織・細胞型の IRI は HPA ID（`hpao:HPAT_000018` = liver、`hpao:HPAC_000063` = Hepatocytes）。
-  ID と CL / UBERON 対応は [sh-ikeda/hpa-expr-spec-rdf-converter](https://github.com/sh-ikeda/hpa-expr-spec-rdf-converter) の
-  `input/hpa_tissue_caloha.tsv`, `hpa_cell_cl.tsv`, `hpa_tissue_uberon.tsv` を元にした（同じ IRI を指す）
+  ID と CL / UBERON 対応は参考文献の池田さんのリポジトリの対応表を元にしている（同じ IRI を指す）
 - CALOHA は exact / close を区別、UBERON / CL はすべて `skos:closeMatch`
 - 組織・細胞型のラベルは HPA の名前そのまま（`skin 1` などの番号付きも含む）
 - 収録範囲は `proteinatlas.tsv` にある情報のみ。発現量は specific 列の値なので、
@@ -79,11 +77,8 @@ hpao:HPAC_000070 a hpao:SingleCellType ;
 | 用語数 | 37 | 154 |
 | CALOHA / UBERON・CL 対応あり | 37 / 37 | 71 / 101（どちらか 107） |
 
-## 経緯
+## 参考
 
-TogoDX/Human の旧グラフ（`hpa_tissue_specificity` / `hpa_cell_specificity`、HPA v20 から作成、
-`refexo:isPositivelySpecificTo` のみ）を逆算した結果をもとに、分類・分布・スコアを保持するスキーマへ置き換えた。
-`mapping/` の CALOHA 対応のうち v20 にあった名前は旧グラフから復元したもの。
-組織・細胞型の ID、UBERON / CL 対応、名前空間（`http://med2rdf.org/hpa/`）は池田さんのリポジトリに合わせた。
-対応表のうち `proteinatlas.tsv` v25.1 に出てこない行（組織 2、細胞型グループ 33）は ID 保持のため残している。
-池田さんの表にない UBERON（blood vessel, cervix, choroid plexus）と CALOHA（blood, ductus deferens）は補った。
+- [sh-ikeda/hpa-expr-spec-rdf-converter](https://github.com/sh-ikeda/hpa-expr-spec-rdf-converter) —
+  `proteinatlas.tsv` を RDF 化する gawk スクリプト。組織・細胞型の ID と CALOHA / UBERON / CL 対応表
+  （`input/hpa_tissue_caloha.tsv`, `input/hpa_cell_cl.tsv`, `input/hpa_tissue_uberon.tsv`）
