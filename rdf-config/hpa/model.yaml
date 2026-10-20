@@ -2,21 +2,21 @@
   - a: obo:SO_0000704
   # RNA tissue specificity
   - hpao:tissueSpecificity:
-    - tissue_specificity: hpao:TissueEnriched
+    - tissue_specificity: hpao:Enriched
   - hpao:tissueDistribution:
     - tissue_distribution: hpao:DetectedInMany
   - hpao:tissueSpecificityScore?:
     - tissue_specificity_score: '"134"^^xsd:decimal'
   # RNA single cell type specificity
   - hpao:cellTypeSpecificity:
-    - cell_type_specificity: hpao:CellTypeEnriched
+    - cell_type_specificity: hpao:Enriched
   - hpao:cellTypeDistribution:
     - cell_type_distribution: hpao:DetectedInSome
   - hpao:cellTypeSpecificityScore?:
     - cell_type_specificity_score: '"4"^^xsd:decimal'
   # RNA single cell type group specificity
   - hpao:cellTypeGroupSpecificity:
-    - cell_type_group_specificity: hpao:CellTypeEnriched
+    - cell_type_group_specificity: hpao:Enriched
   - hpao:cellTypeGroupDistribution:
     - cell_type_group_distribution: hpao:DetectedInSome
   - hpao:cellTypeGroupSpecificityScore?:

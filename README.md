@@ -46,15 +46,15 @@ python3 hpa2rdf.py data/proteinatlas.tsv.zip data/rna_single_cell_type_cell_type
 @prefix hpa:  <http://med2rdf.org/hpa/resource/> .
 
 ensembl:ENSG00000000003 a obo:SO_0000704 ;
-    hpao:tissueSpecificity hpao:LowTissueSpecificity ;
+    hpao:tissueSpecificity hpao:LowSpecificity ;
     hpao:tissueDistribution hpao:DetectedInMany ;
-    hpao:cellTypeSpecificity hpao:CellTypeCoEnriched ;
+    hpao:cellTypeSpecificity hpao:CoEnriched ;
     hpao:cellTypeDistribution hpao:DetectedInMany ;
     hpao:cellTypeSpecificityScore "5"^^xsd:decimal ;
     hpao:coEnrichedIn hpao:HPAC_000047 , hpao:HPAC_000070 ;
     hpao:rnaExpression [ hpao:anatomicalEntity hpao:HPAC_000047 ; hpao:nCPM 1280.5 ] ,
         [ hpao:anatomicalEntity hpao:HPAC_000070 ; hpao:nCPM 3513.3 ] ;
-    hpao:cellTypeGroupSpecificity hpao:CellTypeCoEnriched ;
+    hpao:cellTypeGroupSpecificity hpao:CoEnriched ;
     hpao:cellTypeGroupDistribution hpao:DetectedInMany ;
     hpao:cellTypeGroupSpecificityScore "8"^^xsd:decimal ;
     hpao:coEnrichedIn hpao:HPACG_000005 , hpao:HPACG_000047 ;
@@ -81,8 +81,7 @@ hpao:HPACC_000012 a owl:Class , hpao:SingleCellTypeClass ;  # 細胞型クラス
 
 | 述語 | 値 | 対象 |
 |---|---|---|
-| `hpao:tissueSpecificity` | `TissueEnriched`, `TissueCoEnriched`, `TissueEnhanced`, `LowTissueSpecificity`, `TissueNotDetected` | 全遺伝子 |
-| `hpao:cellTypeSpecificity` / `hpao:cellTypeGroupSpecificity` | `CellTypeEnriched`, `CellTypeCoEnriched`, `CellTypeEnhanced`, `LowCellTypeSpecificity`, `CellTypeNotDetected` | 全遺伝子 |
+| `hpao:tissueSpecificity` / `hpao:cellTypeSpecificity` / `hpao:cellTypeGroupSpecificity` | `Enriched`, `CoEnriched`, `Enhanced`, `LowSpecificity`, `NotDetected` | 全遺伝子 |
 | `hpao:tissueDistribution` / `hpao:cellTypeDistribution` / `hpao:cellTypeGroupDistribution` | `DetectedInAll` / `Many` / `Some` / `Single`, `NotDetected` | 全遺伝子 |
 | `hpao:tissueSpecificityScore` / `hpao:cellTypeSpecificityScore` / `hpao:cellTypeGroupSpecificityScore` | xsd:decimal（次点に対する倍率） | enriched / co-enriched のみ |
 | `hpao:enrichedIn` / `hpao:coEnrichedIn` / `hpao:enhancedIn` | `hpao:Tissue` / `hpao:SingleCellType` / `hpao:SingleCellTypeGroup` | specific 列に列挙されたもの |
@@ -92,7 +91,8 @@ hpao:HPACC_000012 a owl:Class , hpao:SingleCellTypeClass ;  # 細胞型クラス
 - 組織・細胞型・細胞型グループは同じ 3 述語を使い、目的語の型でどの分類かを区別する
 - HPA の "Group enriched"（2〜5 個で 4 倍以上）は `coEnriched`。"group" は細胞型グループの意味にだけ使う
   （`skos:prefLabel` は HPA の表記 "Group enriched" のまま）
-- 細胞型グループ単位の分類も、HPA と同じく細胞型の分類値（`CellType…`）を使う
+- 分類値・分布値は 3 段で共通。どの段の分類かは述語で分かる。HPA の表記（"Tissue enriched" など）は `skos:altLabel`
+- `hpao:NotDetected` は分類値と分布値を兼ねる（v25.1 では分類が Not detected ⇔ 分布が Not detected）
 - 組織・細胞型・グループ・クラスは `owl:Class` で、段を表す型（`hpao:Tissue` など）も持つ（パニング）。
   細胞型 `rdfs:subClassOf` グループ `rdfs:subClassOf` クラス
 - IRI は HPA ID: 組織 `HPAT_`、細胞型 `HPAC_`、グループ `HPACG_`、クラス `HPACC_`（グループ・クラスは名前のアルファベット順）。

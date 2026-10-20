@@ -53,7 +53,7 @@ hpao:enrichedIn a owl:ObjectProperty ;
 hpao:coEnrichedIn a owl:ObjectProperty ;
     rdfs:label "co-enriched in" ;
     rdfs:range hpao:AnatomicalEntity ;
-    rdfs:comment "Member of a set of 2-5 tissues / cell types / cell type groups with at least four-fold higher mean mRNA level compared to any other (\"Group enriched\" in HPA; renamed so that \"group\" only means a cell type group)." .
+    rdfs:comment "Member of a small set of tissues / cell types / cell type groups with at least four-fold higher mean mRNA level compared to any other (\"Group enriched\" in HPA; renamed so that \"group\" only means a cell type group). See hpao:CoEnriched." .
 
 hpao:enhancedIn a owl:ObjectProperty ;
     rdfs:label "enhanced in" ;
@@ -90,8 +90,7 @@ hpao:cellTypeSpecificityScore a owl:DatatypeProperty ;
 
 hpao:cellTypeGroupSpecificity a owl:ObjectProperty ;
     rdfs:label "RNA single cell type group specificity" ;
-    rdfs:range hpao:SpecificityCategory ;
-    rdfs:comment "Takes the CellTypeSpecificityScheme categories, as in HPA." .
+    rdfs:range hpao:SpecificityCategory .
 
 hpao:cellTypeGroupDistribution a owl:ObjectProperty ;
     rdfs:label "RNA single cell type group distribution" ;
@@ -129,40 +128,35 @@ hpao:nCPM a owl:DatatypeProperty ;
     rdfs:range xsd:decimal ;
     rdfs:comment "Normalized counts per million (single cell type)." .
 
-### Specificity categories
+### Specificity categories (shared by tissue, single cell type and single cell type group;
+### the level is given by the predicate, e.g. hpao:tissueSpecificity)
 
-hpao:TissueSpecificityScheme a skos:ConceptScheme ;
-    rdfs:label "RNA tissue specificity" .
+hpao:SpecificityScheme a skos:ConceptScheme ;
+    rdfs:label "RNA specificity" .
 
-hpao:TissueEnriched a hpao:SpecificityCategory ;
-    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Tissue enriched" .
-hpao:TissueCoEnriched a hpao:SpecificityCategory ;
-    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Group enriched" ;
-    skos:definition "At least four-fold higher mean mRNA level in a set of 2-5 tissues compared to any other tissue." .
-hpao:TissueEnhanced a hpao:SpecificityCategory ;
-    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Tissue enhanced" .
-hpao:LowTissueSpecificity a hpao:SpecificityCategory ;
-    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Low tissue specificity" .
-hpao:TissueNotDetected a hpao:SpecificityCategory ;
-    skos:inScheme hpao:TissueSpecificityScheme ; skos:prefLabel "Not detected" .
+hpao:Enriched a hpao:SpecificityCategory ;
+    skos:inScheme hpao:SpecificityScheme ;
+    skos:prefLabel "Enriched" ;
+    skos:altLabel "Tissue enriched" , "Cell type enriched" ;
+    skos:definition "At least four-fold higher mRNA level in one tissue / cell type / cell type group compared to any other." .
+hpao:CoEnriched a hpao:SpecificityCategory ;
+    skos:inScheme hpao:SpecificityScheme ;
+    skos:prefLabel "Co-enriched" ;
+    skos:altLabel "Group enriched" ;
+    skos:definition "At least four-fold higher mean mRNA level in a small set of tissues / cell types / cell type groups compared to any other." ;
+    rdfs:comment "\"Group enriched\" in HPA. Set size in v25.1: 2-5 tissues, 2-15 cell types (mostly up to 10), 2-5 cell type groups." .
+hpao:Enhanced a hpao:SpecificityCategory ;
+    skos:inScheme hpao:SpecificityScheme ;
+    skos:prefLabel "Enhanced" ;
+    skos:altLabel "Tissue enhanced" , "Cell type enhanced" ;
+    skos:definition "At least four-fold higher mRNA level in a tissue / cell type / cell type group compared to the mean of all." .
+hpao:LowSpecificity a hpao:SpecificityCategory ;
+    skos:inScheme hpao:SpecificityScheme ;
+    skos:prefLabel "Low specificity" ;
+    skos:altLabel "Low tissue specificity" , "Low cell type specificity" ;
+    skos:definition "Detected, but not enriched, co-enriched or enhanced." .
 
-hpao:CellTypeSpecificityScheme a skos:ConceptScheme ;
-    rdfs:label "RNA single cell type specificity" ;
-    rdfs:comment "Used for both single cell type and single cell type group specificity." .
-
-hpao:CellTypeEnriched a hpao:SpecificityCategory ;
-    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Cell type enriched" .
-hpao:CellTypeCoEnriched a hpao:SpecificityCategory ;
-    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Group enriched" ;
-    skos:definition "At least four-fold higher mean mRNA level in a set of 2-5 cell types (or cell type groups) compared to any other." .
-hpao:CellTypeEnhanced a hpao:SpecificityCategory ;
-    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Cell type enhanced" .
-hpao:LowCellTypeSpecificity a hpao:SpecificityCategory ;
-    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Low cell type specificity" .
-hpao:CellTypeNotDetected a hpao:SpecificityCategory ;
-    skos:inScheme hpao:CellTypeSpecificityScheme ; skos:prefLabel "Not detected" .
-
-### Distribution categories (shared by tissue and single cell type)
+### Distribution categories (shared by tissue, single cell type and single cell type group)
 
 hpao:DistributionScheme a skos:ConceptScheme ;
     rdfs:label "RNA distribution" .
@@ -175,5 +169,10 @@ hpao:DetectedInSome a hpao:DistributionCategory ;
     skos:inScheme hpao:DistributionScheme ; skos:prefLabel "Detected in some" .
 hpao:DetectedInSingle a hpao:DistributionCategory ;
     skos:inScheme hpao:DistributionScheme ; skos:prefLabel "Detected in single" .
-hpao:NotDetected a hpao:DistributionCategory ;
-    skos:inScheme hpao:DistributionScheme ; skos:prefLabel "Not detected" .
+
+### Used as both specificity and distribution category
+
+hpao:NotDetected a hpao:SpecificityCategory , hpao:DistributionCategory ;
+    skos:inScheme hpao:SpecificityScheme , hpao:DistributionScheme ;
+    skos:prefLabel "Not detected" ;
+    skos:definition "Not detected in any tissue / cell type / cell type group." .
