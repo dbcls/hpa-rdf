@@ -1,0 +1,54 @@
+# hpa_id	hpa_name	cl_id	cl_label
+HPACG_000001	Acinar cells	CL_0000622	acinar cell
+HPACG_000002	Adipocytes	CL_0000136	adipocyte
+HPACG_000003	Adrenal endocrine cells		
+HPACG_000004	Alveolar cells		
+HPACG_000005	Apical squamous epithelial cells		
+HPACG_000006	B-cells	CL_0000236	B cell
+HPACG_000007	Barrier epithelial cells		
+HPACG_000008	Basal cells	CL_0000646	basal cell
+HPACG_000009	Ciliated cells	CL_0000064	ciliated cell
+HPACG_000010	dendritic cells	CL_0000451	dendritic cell
+HPACG_000011	Ductal cells	CL_0000068	duct epithelial cell
+HPACG_000012	Endothelial cells	CL_0000115	endothelial cell
+HPACG_000013	Enterocytes	CL_0000584	enterocyte
+HPACG_000014	Enteroendocrine cells	CL_0000164	enteroendocrine cell
+HPACG_000015	Erythrocytes	CL_0000232	erythrocyte
+HPACG_000016	Fibro-adipogenic progenitors		
+HPACG_000017	Fibroblasts	CL_0000057	fibroblast
+HPACG_000018	Gastric glandular cells		
+HPACG_000019	Glandular cells		
+HPACG_000020	Glial cells	CL_0000125	glial cell
+HPACG_000021	Goblet cells	CL_0000160	goblet cell
+HPACG_000022	Hepatocytes	CL_0000182	hepatocyte
+HPACG_000023	Innate lymphoid cells	CL_0001065	innate lymphoid cell
+HPACG_000024	Ionocytes	CL_0005006	ionocyte
+HPACG_000025	Leydig cells	CL_0000178	Leydig cell
+HPACG_000026	Luminal cells		
+HPACG_000027	Mast cells	CL_0000097	mast cell
+HPACG_000028	Megakaryocytes	CL_0000556	megakaryocyte
+HPACG_000029	Mononuclear phagocytes	CL_0000113	mononuclear phagocyte
+HPACG_000030	Mural cells	CL_0008034	mural cell
+HPACG_000031	Myocytes	CL_0000187	muscle cell
+HPACG_000032	Neuronal cells	CL_0002319	neural cell
+HPACG_000033	Neutrophils	CL_0000775	neutrophil
+HPACG_000034	NK-cells	CL_0000623	natural killer cell
+HPACG_000035	Oocytes	CL_0000023	oocyte
+HPACG_000036	Pancreatic islet cells		
+HPACG_000037	Pigment cells	CL_0000147	pigment cell
+HPACG_000038	Pituitary endocrine cells		
+HPACG_000039	Plasma cells	CL_0000786	plasma cell
+HPACG_000040	Platelets	CL_0000233	platelet
+HPACG_000041	Proliferating cells		
+HPACG_000042	Renal nephron cells		
+HPACG_000043	Reproductive supporting cells		
+HPACG_000044	Secretory cells	CL_0000151	secretory cell
+HPACG_000045	Secretory gland support		
+HPACG_000046	Smooth muscle cells	CL_0000192	smooth muscle cell
+HPACG_000047	Spermatogenic cell types		
+HPACG_000048	Stellate cells		
+HPACG_000049	Stem cells	CL_0000034	stem cell
+HPACG_000050	Stromal cells	CL_0000499	stromal cell
+HPACG_000051	Suprabasal cells	CL_7770004	suprabasal cell
+HPACG_000052	T-cells	CL_0000084	T cell
+HPACG_000053	Trophoblast cells	CL_0000351	trophoblast cell

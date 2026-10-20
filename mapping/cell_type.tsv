@@ -153,36 +153,3 @@ HPAC_000151	Vascular smooth muscle cells	TS-1107	Vascular smooth muscle	close	CL
 HPAC_000152	cDC	TS-2192	Conventional dendritic cell	exact	CL_0000990	conventional dendritic cell
 HPAC_000153	monocytes	TS-0638	Monocyte	exact	CL_0000576	monocyte
 HPAC_000154	pDCs	TS-0801	Plasmacytoid dendritic cell	exact	CL_0000784	plasmacytoid dendritic cell
-HPAC_000155	Acinar cells				CL_0000622	acinar cell
-HPAC_000156	Adrenal endocrine cells					
-HPAC_000157	Alveolar cells					
-HPAC_000158	Apical squamous epithelial cells					
-HPAC_000159	Barrier epithelial cells					
-HPAC_000160	Basal cells				CL_0000646	basal cell
-HPAC_000161	Ciliated cells				CL_0000064	ciliated cell
-HPAC_000162	Ductal cells				CL_0000068	duct epithelial cell
-HPAC_000163	Endothelial cells				CL_0000115	endothelial cell
-HPAC_000164	Enteroendocrine cells				CL_0000164	enteroendocrine cell
-HPAC_000165	Gastric glandular cells					
-HPAC_000166	Glandular cells					
-HPAC_000167	Glial cells				CL_0000125	glial cell
-HPAC_000168	Ionocytes				CL_0005006	ionocyte
-HPAC_000169	Luminal cells					
-HPAC_000170	Mononuclear phagocytes				CL_0000113	mononuclear phagocyte
-HPAC_000171	Mural cells				CL_0008034	mural cell
-HPAC_000172	Myocytes				CL_0000187	muscle cell
-HPAC_000173	Neuronal cells				CL_0002319	neural cell
-HPAC_000174	Pigment cells				CL_0000147	pigment cell
-HPAC_000175	Pituitary endocrine cells					
-HPAC_000176	Proliferating cells					
-HPAC_000177	Renal nephron cells					
-HPAC_000178	Reproductive supporting cells					
-HPAC_000179	Secretory cells				CL_0000151	secretory cell
-HPAC_000180	Secretory gland support					
-HPAC_000181	Spermatogenic cell types					
-HPAC_000182	Stellate cells					
-HPAC_000183	Stem cells				CL_0000034	stem cell
-HPAC_000184	Stromal cells				CL_0000499	stromal cell
-HPAC_000185	Suprabasal cells				CL_7770004	suprabasal cell
-HPAC_000186	Trophoblast cells				CL_0000351	trophoblast cell
-HPAC_000187	dendritic cells				CL_0000451	dendritic cell
